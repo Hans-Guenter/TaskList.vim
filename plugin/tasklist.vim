@@ -370,7 +370,7 @@ endfunction
 command! TaskList call s:TaskList()
 command! TaskListToggle call s:TaskListToggle()
 
-" Quick-and-dirty toggle soluton.
+" Quick-and-dirty toggle solution.
 " TODO: perfect simply solution: setup directory for [text_buffer, tasklist_buffer]
 
 " Function: open task list for toggle {{{1
@@ -388,7 +388,8 @@ endfunction
 
 " Function: open task list for toggle {{{1
 function! s:TaskListClose()
-    let tasklist_bufnr = bufnr('-TaskList_')
+"    let tasklist_bufnr = bufnr('-TaskList_')
+    let tasklist_bufnr = bufnr(bufname("%"))
     if (bufloaded(tasklist_bufnr))
         " tasklist buffer is active.
         let tasklist_bufwinnr = bufwinnr(tasklist_bufnr)
@@ -398,7 +399,7 @@ function! s:TaskListClose()
     else
         " Tasklist windows was closed by 'q', so 's:is_tasklist_open' can not
         " be reset.
-        call s:OpenTaskList()
+        call s:TaskList()
         return
     endif
 endfunction
