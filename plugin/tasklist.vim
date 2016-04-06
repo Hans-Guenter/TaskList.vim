@@ -388,8 +388,11 @@ endfunction
 
 " Function: open task list for toggle {{{1
 function! s:TaskListClose()
-"    let tasklist_bufnr = bufnr('-TaskList_')
-    let tasklist_bufnr = bufnr(bufname("%"))
+    if bufname("%") =~ "-TaskList_\\d\\+"
+       let tasklist_bufnr = bufnr(bufname("%"))
+     else
+      let tasklist_bufnr = bufnr('-TaskList_'.bufnr("%"))
+    endif
     if (bufloaded(tasklist_bufnr))
         " tasklist buffer is active.
         let tasklist_bufwinnr = bufwinnr(tasklist_bufnr)
