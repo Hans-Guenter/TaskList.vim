@@ -396,7 +396,12 @@ function! s:TaskListClose()
     if (bufloaded(tasklist_bufnr))
         " tasklist buffer is active.
         let tasklist_bufwinnr = bufwinnr(tasklist_bufnr)
-        exec tasklist_bufwinnr . 'wincmd w'
+        if tasklist_bufwinnr >= 0
+          exec tasklist_bufwinnr . 'wincmd w'
+        else
+          new
+          exec "b " . tasklist_bufnr
+        endif
         call s:Exit(0)
         let s:is_tasklist_open = 0
     else
