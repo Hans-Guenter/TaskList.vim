@@ -62,6 +62,9 @@
 "
 " 1.00  Initial version.
 "
+" 1.02  Introduction of filetype tasklist
+"       Control of toggle by existence of a buffer with that filetype
+"
 " User Options: {{{1
 "------------------------------------------------------------------------------
 "
@@ -374,7 +377,6 @@ command! TaskListToggle call s:TaskListToggle()
 " TODO: perfect simply solution: setup directory for [text_buffer, tasklist_buffer]
 
 " Function: open task list for toggle {{{1
-let s:is_tasklist_open = 0
 function! s:TaskListOpen()
     let has_task_info = 0
     let has_task_info = s:TaskList()
@@ -382,7 +384,6 @@ function! s:TaskListOpen()
         " No task info found
         return
     endif
-    let s:is_tasklist_open = 1
 endfunction
 " }}}
 
@@ -403,10 +404,7 @@ function! s:TaskListClose()
           exec "b " . tasklist_bufnr
         endif
         call s:Exit(0)
-        let s:is_tasklist_open = 0
     else
-        " Tasklist windows was closed by 'q', so 's:is_tasklist_open' can not
-        " be reset.
         call s:TaskList()
         return
     endif
@@ -415,7 +413,16 @@ endfunction
 
 " Function: Support toggle {{{1
 function! s:TaskListToggle()
-    if (s:is_tasklist_open == 0)
+		let s:tlbuffound = 0
+		let s:currentbufs = tabpagebuflist()
+		let buftlfound = 0
+		for i in s:currentbufs
+			if getbufvar(i,"&ft") == "tasklist"
+				let buftlfound = 1
+				break
+			endif
+		endfor
+    if (buftlfound == 0)
         call s:TaskListOpen()
     else
         call s:TaskListClose()
